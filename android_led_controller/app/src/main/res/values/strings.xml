@@ -5,5 +5,5 @@
     <string name="color_picker_content_desc">Color picker image</string>
     <string name="arrow_content_desc">Arrow image</string>
 
-    <string name="app_name">Color Picker</string>
+    <string name="app_name">LED Controller</string>
 </resources>
