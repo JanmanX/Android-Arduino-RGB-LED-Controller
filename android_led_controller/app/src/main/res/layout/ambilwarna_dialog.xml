@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ambilwarna_viewContainer"
+        android:paddingTop="@dimen/ambilwarna_spacer"
+        android:paddingRight="@dimen/ambilwarna_spacer"
+        android:paddingLeft="@dimen/ambilwarna_spacer"
+        android:paddingBottom="@dimen/ambilwarna_spacer"
+        >
+
+    <dk.meznik.led_controller.AmbilWarnaKotak
+            android:id="@+id/ambilwarna_viewSatBri"
+            android:layout_width="@dimen/ambilwarna_hsvWidth"
+            android:layout_height="@dimen/ambilwarna_hsvHeight"
+            android:layout_marginTop="@dimen/ambilwarna_spacer"
+            android:layout_marginLeft="@dimen/ambilwarna_spacer"
+            />
+
+    <ImageView
+            android:id="@+id/ambilwarna_viewHue"
+            android:layout_width="@dimen/ambilwarna_hueWidth"
+            android:layout_height="@dimen/ambilwarna_hsvHeight"
+            android:layout_toRightOf="@id/ambilwarna_viewSatBri"
+            android:layout_marginLeft="@dimen/ambilwarna_spacer"
+            android:layout_marginTop="@dimen/ambilwarna_spacer"
+            android:layout_marginBottom="@dimen/ambilwarna_spacer"
+            android:src="@drawable/ambilwarna_hue"
+            android:scaleType="fitXY"
+            android:contentDescription="@string/hue_view_content_desc"
+            />
+
+    <ImageView
+            android:id="@+id/ambilwarna_cursor"
+            android:layout_width="9dp"
+            android:layout_height="9dp"
+            android:src="@drawable/ambilwarna_cursor"
+            android:scaleType="matrix"
+            android:contentDescription="@string/hue_cursor_content_desc"
+            />
+
+    <ImageView
+            android:id="@+id/ambilwarna_target"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/ambilwarna_target"
+            android:scaleType="matrix"
+            android:contentDescription="@string/color_picker_content_desc"
+            />
+
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ambilwarna_state"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/ambilwarna_spacer"
+            android:layout_below="@id/ambilwarna_viewSatBri"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            >
+
+        <View
+                android:layout_width="@dimen/ambilwarna_color_width"
+                android:layout_height="@dimen/ambilwarna_color_height"
+                android:id="@+id/ambilwarna_warnaLama"
+                android:background="@color/prev_color"
+                />
+
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ambilwarna_arrow_right"
+                android:paddingLeft="@dimen/ambilwarna_spacer"
+                android:paddingRight="@dimen/ambilwarna_spacer"
+                android:contentDescription="@string/arrow_content_desc"
+                />
+
+        <View
+                android:layout_width="@dimen/ambilwarna_color_width"
+                android:layout_height="@dimen/ambilwarna_color_height"
+                android:id="@+id/ambilwarna_warnaBaru"
+                android:background="@color/new_color"
+                />
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/btn_content"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_below="@id/ambilwarna_state"
+            android:layout_marginTop="@dimen/ambilwarna_spacer"
+            android:layout_alignRight="@id/ambilwarna_viewHue">
+
+        <Button
+                android:id="@+id/ambilwarna_btn_no"
+                android:text="@android:string/cancel"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="2dp"/>
+
+        <Button
+                android:id="@+id/ambilwarna_btn_yes"
+                android:text="@android:string/ok"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="2dp"/>
+
+    </LinearLayout>
+</RelativeLayout>

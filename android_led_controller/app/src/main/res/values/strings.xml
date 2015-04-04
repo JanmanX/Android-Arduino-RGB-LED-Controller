@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hue_view_content_desc">Hue image</string>
+    <string name="hue_cursor_content_desc">Hue image cursor</string>
+    <string name="color_picker_content_desc">Color picker image</string>
+    <string name="arrow_content_desc">Arrow image</string>
+
+    <string name="app_name">Color Picker</string>
+</resources>
