@@ -2,6 +2,11 @@
 Android app and Arduino program for controlling a RGB LED strip remotely. 
 *(NOT TESTED WITH A STRIP YET, ONLY COMMUNICATION BETWEEN ANDROID-ARDUINO TESTED!)*
 
+#Setup
+Nexus 4, Android version 5.0.1.
+
+Arduino Uno R3 with Ethernet Shield W5100. 
+
 #TODO
 - User input for IP and PORT
 - Display current status of Arduino in the App
