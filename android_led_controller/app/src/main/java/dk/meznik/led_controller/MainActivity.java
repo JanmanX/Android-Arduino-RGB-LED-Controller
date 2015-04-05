@@ -107,7 +107,7 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
                        Thread.sleep(800);
                    }
                } catch(Exception e) {
-                   log("Exception occured!");
+                   log(e.getMessage());
                    e.printStackTrace();
                }
            }
@@ -119,8 +119,9 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
         intensity = seekBarIntensity.getProgress() + INTENSITY_MIN;
         flashing = seekBarFlashing.getProgress();
 
-        if(socket.isConnected() == false) {
+        if(socket == null || socket.isConnected() == false) {
             log("update() failed: Not connected to arduino!");
+            connect();
             return;
         }
 
