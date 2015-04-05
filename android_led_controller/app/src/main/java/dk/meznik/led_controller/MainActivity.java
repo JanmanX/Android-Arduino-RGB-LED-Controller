@@ -1,11 +1,14 @@
 package dk.meznik.led_controller;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,19 +54,25 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
     int intensity = 100;                // Intensity of the color. To be implemented
     int flashing = 0;                   // Speed of the flash. To be implemented
 
+    // For saving settings
+    private SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
+        loadSettings();
 
         seekBarIntensity = (SeekBar) findViewById(R.id.seekbar_intensity);
         seekBarFlashing = (SeekBar) findViewById(R.id.seekbar_flashing);
         textViewStatus = (TextView) findViewById(R.id.textview_status);
         buttonSelectColor = (Button) findViewById(R.id.button_select_color);
         buttonSend = (Button)findViewById(R.id.button_send);
-
         seekBarFlashing.setProgress(0);
         seekBarIntensity.setProgress(100);
+        textViewStatus.setMovementMethod(new ScrollingMovementMethod());
 
         buttonSelectColor.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,7 +129,7 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
                //if(socket != null && socket.isConnected()) return; // Nothing to do
                try {
 
-                   log("Connecting ...");
+                   log("Connecting to IP: " + ip + ":" + port);
                    InetAddress inetaddr = InetAddress.getByName(ip);
                    socket = new Socket(inetaddr, port);
                    if(socket.isConnected() == false) {
@@ -244,8 +253,12 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
                 ConnectionSettingsDialog csd = (ConnectionSettingsDialog)dialog;
 
                 if(csd.changed) {
+
                     port = csd.port == 0 ? port : csd.port;
                     ip = csd.ip.length() == 0 ? ip : csd.ip;
+
+                    saveSettings();
+                    log("Settings changed and saved");
 
                     // close current session and reopen
                     try {
@@ -262,14 +275,25 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
        connectionSettingsDialog.show();
     }
 
-    public void setIp(String ip) {
-        this.ip = ip;
+    public void saveSettings()
+    {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(getString(R.string.settings_port), port);
+        editor.putString(getString(R.string.settings_ip), ip);
+        editor.apply();
+        //editor.commit();
     }
-    public String getIp() {return this.ip;}
 
-    public void setPort(int port) {
-        this.port = port;
+    public void loadSettings()
+    {
+        port = getResources().getInteger(R.integer.default_port);
+        ip = getResources().getString(R.string.default_ip);
+
+        port = sharedPreferences.getInt(getString(R.string.settings_port),port);
+        ip = sharedPreferences.getString(getString(R.string.settings_ip),ip);
     }
+
+    public String getIp() {return this.ip;}
     public int getPort(){return this.port;}
 
 }

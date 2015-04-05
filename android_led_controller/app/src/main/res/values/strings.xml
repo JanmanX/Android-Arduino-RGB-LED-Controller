@@ -6,4 +6,10 @@
     <string name="arrow_content_desc">Arrow image</string>
 
     <string name="app_name">LED Controller</string>
+
+    <string name="default_ip">192.168.1.2</string>
+    <string name="settings_ip">settings_ip</string>
+
+    <integer name="default_port">31337</integer>
+    <string name="settings_port">settings_port</string>
 </resources>
