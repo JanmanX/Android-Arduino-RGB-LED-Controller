@@ -265,8 +265,11 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
     public void setIp(String ip) {
         this.ip = ip;
     }
+    public String getIp() {return this.ip;}
 
     public void setPort(int port) {
         this.port = port;
     }
+    public int getPort(){return this.port;}
+
 }

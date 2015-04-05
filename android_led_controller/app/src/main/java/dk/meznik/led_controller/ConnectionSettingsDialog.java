@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.io.IOException;
 
@@ -17,11 +18,12 @@ import java.io.IOException;
  * Created by ghost on 4/5/15.
  */
 public class ConnectionSettingsDialog extends Dialog implements View.OnClickListener {
-    public MainActivity activity;
-    public Dialog dialog;
-    public Button buttonOk;
-    public EditText editTextIp;
-    public EditText editTextPort;
+    private MainActivity activity;
+    private Button buttonOk;
+    private EditText editTextIp;
+    private EditText editTextPort;
+    private TextView textViewIp;
+    private TextView textViewPort;
 
     public String ip = "";
     public int port = 0;
@@ -42,8 +44,12 @@ public class ConnectionSettingsDialog extends Dialog implements View.OnClickList
         buttonOk = (Button)findViewById(R.id.button_dialog_ok);
         editTextIp = (EditText)findViewById(R.id.edittext_ip);
         editTextPort = (EditText)findViewById(R.id.edittext_port);
+        textViewIp = (TextView)findViewById(R.id.textview_current_ip);
+        textViewPort = (TextView)findViewById(R.id.textview_current_port);
 
         buttonOk.setOnClickListener(this);
+        textViewIp.setText("IP: " + activity.getIp());
+        textViewPort.setText("Port: " + Integer.toString(activity.getPort()));
     }
 
 
