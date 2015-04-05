@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:minWidth="300dp"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#ff0092ff">
+        <TextView
+            android:id="@+id/textview_current_ip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
+            android:text="IP"/>
+        <TextView
+            android:id="@+id/textview_current_port"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
+            android:text="PORT"/>
+        </LinearLayout>
+
+    <EditText
+        android:id="@+id/edittext_ip"
+        android:inputType="number"
+        android:digits="0123456789."
+        android:hint="IP (leave blank for no change)"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="4dp" />
+    <EditText
+        android:id="@+id/edittext_port"
+        android:inputType="number"
+        android:hint="PORT (leave blank for no change)"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/button_dialog_ok"
+        android:textColor="@color/white"
+        android:background="@color/blue"
+        android:text="OK"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

@@ -1,18 +1,28 @@
 package dk.meznik.led_controller;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 // TODO: Better exception handling
 
@@ -21,13 +31,14 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
     static final int INTENSITY_MIN = 20; // Minimum value for LED intensity
 
     // Connection
-    static final int PORT = 31337;
-    static final String IP = "192.168.1.198";
+    int port = 31337;
+    String ip = "192.168.1.198";
     Socket socket;
     InputStream inputStream;
 
     // Views
     Button buttonSelectColor;
+    Button buttonSend;
     SeekBar seekBarIntensity;
     SeekBar seekBarFlashing;
     TextView textViewStatus;
@@ -49,6 +60,7 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
         seekBarFlashing = (SeekBar) findViewById(R.id.seekbar_flashing);
         textViewStatus = (TextView) findViewById(R.id.textview_status);
         buttonSelectColor = (Button) findViewById(R.id.button_select_color);
+        buttonSend = (Button)findViewById(R.id.button_send);
 
         seekBarFlashing.setProgress(0);
         seekBarIntensity.setProgress(100);
@@ -57,6 +69,12 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
             @Override
             public void onClick(View v) {
                 showColorPicker();
+            }
+        });
+        buttonSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                update();
             }
         });
 
@@ -72,6 +90,28 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
         connect();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.menu_item_connection_options:
+                showSettingsDialog();
+                return true;
+            case R.id.menu_item_about:
+                Toast.makeText(getApplicationContext(), "Not implemented yet", Toast.LENGTH_LONG).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     // Connects to Arduino and starts a listening thread
     private void connect() {
        new Thread(new Runnable() {
@@ -81,8 +121,8 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
                try {
 
                    log("Connecting ...");
-                   InetAddress inetaddr = InetAddress.getByName(IP);
-                   socket = new Socket(inetaddr,PORT);
+                   InetAddress inetaddr = InetAddress.getByName(ip);
+                   socket = new Socket(inetaddr, port);
                    if(socket.isConnected() == false) {
                        log("Could not connect!");
                        return;
@@ -150,12 +190,6 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
         }).start();
     }
 
-    // Wrapper method for real update
-    public void update(View view)
-    {
-        update();
-    }
-
     /**
      * Shows Color Picker dialog fragment. If color wasn't set previously, use BLUE by default.
      */
@@ -186,7 +220,6 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
         buttonSelectColor.setBackgroundColor(color);
     }
 
-
     private void log(final String msg) {
         log(msg, "> ");
     }
@@ -199,5 +232,41 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
                 textViewStatus.append(prefix + msg +"\n");
             }
         });
+    }
+
+
+    private void showSettingsDialog()
+    {
+        ConnectionSettingsDialog connectionSettingsDialog = new ConnectionSettingsDialog(this);
+        connectionSettingsDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                ConnectionSettingsDialog csd = (ConnectionSettingsDialog)dialog;
+
+                if(csd.changed) {
+                    port = csd.port == 0 ? port : csd.port;
+                    ip = csd.ip.length() == 0 ? ip : csd.ip;
+
+                    // close current session and reopen
+                    try {
+                        if (socket != null) {
+                            socket.close();
+                        }
+                    } catch (IOException e) {
+                        log(e.getMessage());
+                        socket = null;
+                    }
+                }
+            }
+        });
+       connectionSettingsDialog.show();
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 }

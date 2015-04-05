@@ -3,7 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#DADADA">
+    android:background="#DADADA"
+    style="@style/AppTheme"
+    android:theme="@style/AppTheme">
+
 
     <TextView
         android:background="#000000"
@@ -18,7 +21,7 @@
         android:background="#ff373737"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_weight="2"
+        android:layout_weight="1.77"
         android:orientation="vertical"
         android:gravity="bottom">
 
@@ -79,6 +82,5 @@
         android:textColor="#ffff0000"
         android:background="#222222"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="update"/>
+        android:layout_height="wrap_content"/>
 </LinearLayout>
