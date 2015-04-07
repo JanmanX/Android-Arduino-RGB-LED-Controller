@@ -4,7 +4,7 @@ Android app and Arduino program for controlling a RGB LED strip remotely.
 
 #How it works
 [This](http://www.jerome-bernard.com/blog/2013/01/12/rgb-led-strip-controlled-by-an-arduino)
-blog helped me setup an Arduino Uno to control the strip. I figured it would be nice to control my RGB LED strip directly from my Android phone.
+blog helped me setup an Arduino Uno to control a LED RGB strip in my home. I figured it would be nice to control my RGB LED strip directly from my Android phone.
 
 This project is very basic:
 The app sends a string of data to the arduino in this format:
