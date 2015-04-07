@@ -13,12 +13,14 @@ values for the output pins accordingly. (The Arduino also sends the string back,
 which helps me debug for any connection errors, and to verify connection).
 
 Note that you can connect to the Arduino using a telnet connection:
-'telnet <IP> <PORT>'
+`telnet <IP> <PORT>`
 
 Now you can change colors by sending strings with a letter for a color followed
 by a number from 0 to 255.
 For example, this string will change the LED strip color to green:
-'r0g255b0'
+`r0g255b0`
+Or to only change the blue color:
+`b100`
 
 #Setup
 Nexus 4, Android version 5.0.1.
