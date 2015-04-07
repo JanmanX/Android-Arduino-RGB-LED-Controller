@@ -62,6 +62,15 @@ void loop ()
 
     // Respond to client
     client.println("Received: " + buffer);
+    
+    buffer = "Configuration: ";
+    buffer += "r" + String(red);
+    buffer += " g" + String(green);
+   buffer += " b" + String(blue);
+  buffer += " i" + String(intensity);
+   buffer += " f" + String(flashing);
+   
+    client.println(buffer);
     buffer = "";
 
     // Light

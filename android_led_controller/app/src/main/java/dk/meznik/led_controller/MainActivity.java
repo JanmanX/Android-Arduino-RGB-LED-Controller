@@ -162,6 +162,8 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
 
                        while(inputStream.available() > 0) {
                             buffer += (char)inputStream.read();
+                           if(buffer.charAt(buffer.length()-1) == '\n')
+                               break;
                        }
 
                        if(buffer.length() > 0) {
@@ -323,6 +325,9 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
     // Sets the values of different controls
     public void restoreValues()
     {
+        red = Color.red(mColor);
+        green = Color.green(mColor);
+        blue = Color.blue(mColor);
         buttonSelectColor.setTextColor(mColor);
         seekBarFlashing.setProgress(flash);
         seekBarIntensity.setProgress(intensity - INTENSITY_MIN);
