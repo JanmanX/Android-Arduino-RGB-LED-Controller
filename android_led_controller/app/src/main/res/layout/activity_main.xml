@@ -77,6 +77,7 @@
         android:textColor="#CCCCCC"/>
     </LinearLayout>
 
+    <!--
     <Button
         android:text="SEND"
         android:id="@+id/button_send"
@@ -84,4 +85,6 @@
         android:background="#222222"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+        -->
+
 </LinearLayout>

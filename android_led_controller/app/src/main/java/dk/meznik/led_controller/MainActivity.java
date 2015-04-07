@@ -41,7 +41,6 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
 
     // Views
     Button buttonSelectColor;
-    Button buttonSend;
     SeekBar seekBarIntensity;
     SeekBar seekBarFlashing;
     TextView textViewStatus;
@@ -69,7 +68,6 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
         seekBarFlashing = (SeekBar) findViewById(R.id.seekbar_flashing);
         textViewStatus = (TextView) findViewById(R.id.textview_status);
         buttonSelectColor = (Button) findViewById(R.id.button_select_color);
-        buttonSend = (Button)findViewById(R.id.button_send);
         seekBarFlashing.setProgress(0);
         seekBarIntensity.setProgress(100);
         textViewStatus.setMovementMethod(new ScrollingMovementMethod());
@@ -80,12 +78,23 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
                 showColorPicker();
             }
         });
-        buttonSend.setOnClickListener(new View.OnClickListener() {
+
+        SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener(){
             @Override
-            public void onClick(View v) {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
                 update();
             }
-        });
+        };
+        seekBarFlashing.setOnSeekBarChangeListener(seekBarChangeListener);
+        seekBarIntensity.setOnSeekBarChangeListener(seekBarChangeListener);
 
         // when activity is re-created, we need to set OnAmbilWarnaListener in order to get callbacks.
         if (savedInstanceState != null) {
@@ -112,6 +121,9 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
         switch (item.getItemId()) {
             case R.id.menu_item_connection_options:
                 showSettingsDialog();
+                return true;
+            case R.id.menu_item_force_send:
+                update();
                 return true;
             case R.id.menu_item_about:
                 Toast.makeText(getApplicationContext(), "Not implemented yet", Toast.LENGTH_LONG).show();
@@ -227,6 +239,7 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
         blue = Color.blue(color);
         Log.d(TAG, "red = " + red + ", green = " + green + ", blue = " + blue);
         buttonSelectColor.setBackgroundColor(color);
+        update();
     }
 
     private void log(final String msg) {
