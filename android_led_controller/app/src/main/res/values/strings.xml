@@ -12,4 +12,13 @@
 
     <integer name="default_port">31337</integer>
     <string name="settings_port">settings_port</string>
+
+    <integer name="default_color">0xFFFFFF</integer>
+    <string name="settings_color">settings_color</string>
+
+    <integer name="default_intensity">100</integer>
+    <string name="settings_intensity">settings_intensity</string>
+
+    <integer name="default_flash">100</integer>
+    <string name="settings_flash">settings_flash</string>
 </resources>

@@ -1,6 +1,5 @@
 package dk.meznik.led_controller;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -15,8 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 // TODO: Better exception handling
 
@@ -51,7 +47,7 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
     int green = 0;
     int blue = 0;
     int intensity = 100;                // Intensity of the color. To be implemented
-    int flashing = 0;                   // Speed of the flash. To be implemented
+    int flash = 0;                   // Speed of the flash. To be implemented
 
     // For saving settings
     private SharedPreferences sharedPreferences;
@@ -62,15 +58,15 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
         setContentView(R.layout.activity_main);
 
         sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
-        loadSettings();
 
         seekBarIntensity = (SeekBar) findViewById(R.id.seekbar_intensity);
         seekBarFlashing = (SeekBar) findViewById(R.id.seekbar_flashing);
         textViewStatus = (TextView) findViewById(R.id.textview_status);
         buttonSelectColor = (Button) findViewById(R.id.button_select_color);
-        seekBarFlashing.setProgress(0);
-        seekBarIntensity.setProgress(100);
         textViewStatus.setMovementMethod(new ScrollingMovementMethod());
+
+        loadSettings();
+        restoreValues();
 
         buttonSelectColor.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,6 +74,7 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
                 showColorPicker();
             }
         });
+
 
         SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener(){
             @Override
@@ -133,6 +130,13 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
         }
     }
 
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        saveSettings();
+    }
+
     // Connects to Arduino and starts a listening thread
     private void connect() {
        new Thread(new Runnable() {
@@ -178,7 +182,7 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
     // Sends data to Arduino
     private void update() {
         intensity = seekBarIntensity.getProgress() + INTENSITY_MIN;
-        flashing = seekBarFlashing.getProgress();
+        flash = seekBarFlashing.getProgress();
 
         if(socket == null || socket.isConnected() == false) {
             log("update() failed: Not connected to arduino!");
@@ -194,12 +198,12 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
                 buffer.append("g"+green);
                 buffer.append("b"+blue);
                 buffer.append("i"+intensity);
-                buffer.append("f"+flashing);
+                buffer.append("f"+ flash);
 
                 try {
                     socket.getOutputStream().write(buffer.toString().getBytes());
                     log("Sent: " + "red = " + red + ", green = " + green + ", blue = " + blue);
-                    log("    intensity = " + intensity + ", flashing = " + flashing,"");
+                    log("    intensity = " + intensity + ", flash = " + flash,"");
                 } catch(Exception e) {
                     e.printStackTrace();
                     log("update() failed: Could not send to arduino:");
@@ -294,6 +298,9 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(getString(R.string.settings_port), port);
         editor.putString(getString(R.string.settings_ip), ip);
+        editor.putInt(getString(R.string.settings_color), mColor);
+        editor.putInt(getString(R.string.settings_intensity),intensity);
+        editor.putInt(getString(R.string.settings_flash), flash);
         editor.apply();
         //editor.commit();
     }
@@ -302,11 +309,24 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
     {
         port = getResources().getInteger(R.integer.default_port);
         ip = getResources().getString(R.string.default_ip);
+        mColor = getResources().getInteger(R.integer.default_color);
+        intensity = getResources().getInteger(R.integer.default_intensity);
+        flash = getResources().getInteger(R.integer.default_flash);
 
         port = sharedPreferences.getInt(getString(R.string.settings_port),port);
         ip = sharedPreferences.getString(getString(R.string.settings_ip),ip);
+        mColor = sharedPreferences.getInt(getString(R.string.settings_color), mColor);
+        intensity = sharedPreferences.getInt(getString(R.string.settings_intensity),intensity);
+        flash = sharedPreferences.getInt(getString(R.string.settings_flash),flash);
     }
 
+    // Sets the values of different controls
+    public void restoreValues()
+    {
+        buttonSelectColor.setTextColor(mColor);
+        seekBarFlashing.setProgress(flash);
+        seekBarIntensity.setProgress(intensity - INTENSITY_MIN);
+    }
     public String getIp() {return this.ip;}
     public int getPort(){return this.port;}
 
