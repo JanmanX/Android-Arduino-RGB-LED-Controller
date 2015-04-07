@@ -238,7 +238,8 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
         green = Color.green(color);
         blue = Color.blue(color);
         Log.d(TAG, "red = " + red + ", green = " + green + ", blue = " + blue);
-        buttonSelectColor.setBackgroundColor(color);
+        buttonSelectColor.setTextColor(color);
+        //buttonSelectColor.setBackgroundColor(color);
         update();
     }
 

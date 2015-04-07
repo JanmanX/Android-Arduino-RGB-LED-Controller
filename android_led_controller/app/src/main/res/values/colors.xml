@@ -4,4 +4,5 @@
     <color name="new_color">#AAAAFF</color>
     <color name="white">#FFFFFF</color>
     <color name="blue">#ff0092ff</color>
+    <color name="black">#000000</color>
 </resources>
