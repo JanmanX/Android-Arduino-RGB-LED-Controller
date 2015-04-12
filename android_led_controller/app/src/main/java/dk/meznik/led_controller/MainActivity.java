@@ -75,23 +75,40 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
             }
         });
 
-
-        SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener(){
+        seekBarFlashing.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
             }
+
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
 
             }
+
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                update();
+                flash = seekBar.getProgress();
+                update("f"+flash);
             }
-        };
-        seekBarFlashing.setOnSeekBarChangeListener(seekBarChangeListener);
-        seekBarIntensity.setOnSeekBarChangeListener(seekBarChangeListener);
+        });
+        seekBarIntensity.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                intensity = seekBarIntensity.getProgress() + INTENSITY_MIN;
+                update("i"+intensity);
+            }
+        });
 
         // when activity is re-created, we need to set OnAmbilWarnaListener in order to get callbacks.
         if (savedInstanceState != null) {
@@ -167,7 +184,7 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
                        }
 
                        if(buffer.length() > 0) {
-                           buffer = buffer.replace('\n',(char)0);
+                            buffer = buffer.replace('\n',(char)0);
                            log(buffer, "< ");
                            buffer = "";
                        }
@@ -181,11 +198,9 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
        }).start();
     }
 
-    // Sends data to Arduino
-    private void update() {
-        intensity = seekBarIntensity.getProgress() + INTENSITY_MIN;
-        flash = seekBarFlashing.getProgress();
-
+    // Sends the string to the Arduino
+    private void update(final String msg)
+    {
         if(socket == null || socket.isConnected() == false) {
             log("update() failed: Not connected to arduino!");
             connect();
@@ -195,17 +210,9 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
         new Thread(new Runnable() {
             @Override
             public void run() {
-                StringBuffer buffer = new StringBuffer(20); // approx
-                buffer.append("r"+red);
-                buffer.append("g"+green);
-                buffer.append("b"+blue);
-                buffer.append("i"+intensity);
-                buffer.append("f"+ flash);
-
                 try {
-                    socket.getOutputStream().write(buffer.toString().getBytes());
-                    log("Sent: " + "red = " + red + ", green = " + green + ", blue = " + blue);
-                    log("    intensity = " + intensity + ", flash = " + flash,"");
+                    socket.getOutputStream().write(msg.getBytes());
+                    log("Sent: " + msg);
                 } catch(Exception e) {
                     e.printStackTrace();
                     log("update() failed: Could not send to arduino:");
@@ -215,6 +222,25 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
                 }
             }
         }).start();
+    }
+    // Build a complete update string and updates it
+    private void update() {
+        StringBuffer buffer = new StringBuffer(20); // approx
+        buffer.append("r"+red);
+        buffer.append("g"+green);
+        buffer.append("b"+blue);
+        buffer.append("i"+seekBarIntensity.getProgress() + INTENSITY_MIN);
+        buffer.append("f"+ seekBarFlashing.getProgress());
+
+        update(buffer.toString());
+    }
+    // Builds update string for colors and sends it
+    private void updateColor() {
+        StringBuffer buffer = new StringBuffer(20); // approx
+        buffer.append("r"+red);
+        buffer.append("g"+green);
+        buffer.append("b"+blue);
+        update(buffer.toString());
     }
 
     /**
@@ -245,8 +271,7 @@ public class MainActivity extends FragmentActivity implements OnAmbilWarnaListen
         blue = Color.blue(color);
         Log.d(TAG, "red = " + red + ", green = " + green + ", blue = " + blue);
         buttonSelectColor.setTextColor(color);
-        //buttonSelectColor.setBackgroundColor(color);
-        update();
+        updateColor();
     }
 
     private void log(final String msg) {
